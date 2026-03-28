@@ -1,0 +1,66 @@
+<svg width="432" height="912" viewBox="0 0 432 912" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="432" height="912" fill="#F8F8F8"/>
+  <g filter="url(#f0)">
+    <rect x="172" y="39" width="80" height="80" rx="20" fill="white"/>
+  </g>
+  <text x="212" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="34">🔒</text>
+  <text x="216" y="198" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="800" fill="#FF8811">Ashokvatika</text>
+  <text x="216" y="228" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#495468">Sign in to continue</text>
+  <text x="42" y="306" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#3E485A">Username</text>
+  <g filter="url(#f1)">
+    <rect x="40" y="325" width="352" height="54" rx="16" fill="white"/>
+  </g>
+  <text x="58" y="359" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#9CA3B5">Enter your username</text>
+  <path d="M354 342C347 342 341 347 338 352C341 357 347 362 354 362C361 362 367 357 370 352C367 347 361 342 354 342ZM354 358C351 358 348 355 348 352C348 349 351 346 354 346C357 346 360 349 360 352C360 355 357 358 354 358Z" fill="#7E8697"/>
+  <text x="42" y="422" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="#3E485A">Password</text>
+  <g filter="url(#f1)">
+    <rect x="40" y="441" width="352" height="54" rx="16" fill="white"/>
+  </g>
+  <text x="58" y="475" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#9CA3B5">Enter your password</text>
+  <path d="M354 458C347 458 341 463 338 468C341 473 347 478 354 478C361 478 367 473 370 468C367 463 361 458 354 458ZM354 474C351 474 348 471 348 468C348 465 351 462 354 462C357 462 360 465 360 468C360 471 357 474 354 474Z" fill="#7E8697"/>
+  <g filter="url(#f2)">
+    <rect x="40" y="550" width="352" height="60" rx="16" fill="url(#g0)"/>
+  </g>
+  <text x="216" y="588" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="800" fill="white">Sign In</text>
+  <g filter="url(#f1)">
+    <rect x="40" y="626" width="352" height="60" rx="16" fill="white"/>
+  </g>
+  <text x="216" y="664" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="800" fill="#4A5568">Clear</text>
+  <text x="216" y="770" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#2563FF">Forgot password?</text>
+  <defs>
+    <filter id="f0" x="154" y="25" width="116" height="116" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="9"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.15 0 0 0 0 0.15 0 0 0 0 0.15 0 0 0 0.12 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+    </filter>
+    <filter id="f1" x="30" y="319" width="372" height="74" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="5"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.15 0 0 0 0 0.15 0 0 0 0 0.15 0 0 0 0.15 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+    </filter>
+    <filter id="f2" x="30" y="544" width="372" height="80" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="5"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.56 0 0 0 0 0.07 0 0 0 0.35 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+    </filter>
+    <linearGradient id="g0" x1="216" y1="550" x2="216" y2="610" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB254"/>
+      <stop offset="1" stop-color="#FF8811"/>
+    </linearGradient>
+  </defs>
+</svg>

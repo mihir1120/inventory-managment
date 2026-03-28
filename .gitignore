@@ -1,0 +1,13 @@
+.gradle/
+.gradle-user-home/
+build/
+app/build/
+.android/
+.android-user/
+.idea/
+local.properties
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
