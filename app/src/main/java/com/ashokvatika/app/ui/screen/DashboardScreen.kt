@@ -39,12 +39,17 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Undo
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,6 +57,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -98,6 +105,7 @@ private enum class InputTarget {
 }
 
 data class DashboardDraft(
+    val id: Int = 0,
     val productTitle: String = "Product Name",
     val batch: Int = 0,
     val sale: Int = 0,
@@ -146,6 +154,7 @@ fun DashboardScreen(
     var pendingCameraUri by remember { mutableStateOf<Uri?>(null) }
     var inputTarget by remember { mutableStateOf<InputTarget?>(null) }
     var inputBuffer by rememberSaveable { mutableStateOf("") }
+    var inputInitialValue by rememberSaveable { mutableStateOf("") }
     var showVendorDialog by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var cameraDenied by remember { mutableStateOf(false) }
@@ -279,8 +288,7 @@ fun DashboardScreen(
                 ImageSelectorCard(
                     photoUri = photoUri,
                     showActions = showImageActions,
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                         .weight(imageWeight),
                     onImageClick = {
                         if (photoUri != null) {
@@ -308,23 +316,22 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.height(if (compactHeight) 8.dp else 12.dp))
 
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                         .weight(contentWeight),
                     verticalArrangement = Arrangement.spacedBy(if (compactHeight) 12.dp else 16.dp)
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(if (compactHeight) 4.dp else 6.dp)
                     ) {
                         Text(
                             text = productTitle,
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth()
                                 .clickable {
                                     inputTarget = InputTarget.Title
-                                    inputBuffer = productTitle
+                                    inputInitialValue = if (productTitle == "Product Name") "" else productTitle
+                                inputBuffer = inputInitialValue
                                 },
                             textAlign = TextAlign.Center,
                             style = dashboardTextStyle(titleSize, DashboardText, (-1.2).sp, FontWeight.Normal)
@@ -336,14 +343,13 @@ fun DashboardScreen(
                         Text(
                             text = "in stock",
                             modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
+        textAlign = TextAlign.Center,
                             style = dashboardTextStyle(supportingSize, DashboardHint, (-0.4).sp, FontWeight.Normal)
                         )
 
                         Text(
                             text = inStock.toString(),
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth()
                                 .scale(stockScale),
                             textAlign = TextAlign.Center,
                             style = dashboardTextStyle(stockSize, DashboardText, (-1.6).sp, FontWeight.Normal)
@@ -352,29 +358,32 @@ fun DashboardScreen(
 
                     Column(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(spacing)
+        verticalArrangement = Arrangement.spacedBy(spacing)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(spacing)
+        horizontalArrangement = Arrangement.spacedBy(spacing)
                         ) {
                             DashboardMetricTile("batch", batch.toString(), tileHeight, tileTitleSize, tileValueSize, Modifier.weight(1f)) {
                                 inputTarget = InputTarget.Batch
-                                inputBuffer = if (batch == 0) "" else batch.toString()
+                                inputInitialValue = if (batch == 0) "" else batch.toString()
+                                inputBuffer = inputInitialValue
                             }
                             DashboardMetricTile("sale", sale.toString(), tileHeight, tileTitleSize, tileValueSize, Modifier.weight(1f)) {
                                 inputTarget = InputTarget.Sale
-                                inputBuffer = if (sale == 0) "" else sale.toString()
+                                inputInitialValue = if (sale == 0) "" else sale.toString()
+                                inputBuffer = inputInitialValue
                             }
                             DashboardMetricTile("rent", rent.toString(), tileHeight, tileTitleSize, tileValueSize, Modifier.weight(1f)) {
                                 inputTarget = InputTarget.Rent
-                                inputBuffer = if (rent == 0) "" else rent.toString()
+                                inputInitialValue = if (rent == 0) "" else rent.toString()
+                                inputBuffer = inputInitialValue
                             }
                         }
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(spacing)
+        horizontalArrangement = Arrangement.spacedBy(spacing)
                         ) {
                             DashboardMetricTile("date", displayDate, tileHeight, tileTitleSize, if (adaptive.isCompact && compactHeight) 18.sp else if (adaptive.isCompact) 22.sp else 28.sp, Modifier.weight(1f)) {
                                 showDatePicker = true
@@ -399,6 +408,7 @@ fun DashboardScreen(
                             val savedAt = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
                             onSaveInventory(
                                 InventoryRecord(
+                                    id = draft.id,
                                     title = trimmedTitle,
                                     vendor = vendorName.trim(),
                                     vendorPhone = vendorPhone.trim(),
@@ -438,7 +448,9 @@ fun DashboardScreen(
             },
             value = inputBuffer,
             numericOnly = inputTarget != InputTarget.Title,
+            showUndo = inputTarget == InputTarget.Sale || inputTarget == InputTarget.Rent,
             onValueChange = { inputBuffer = it },
+            onUndo = { inputBuffer = inputInitialValue },
             onDismiss = { inputTarget = null },
             onConfirm = {
                 when (inputTarget) {
@@ -610,8 +622,7 @@ private fun ImageSelectorCard(
             .background(DashboardSurface)
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
                 .weight(1f)
                 .clickable(enabled = photoUri != null) { onImageClick() }
                 .background(
@@ -651,8 +662,7 @@ private fun ImageSelectorCard(
 
         if (showActions) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
                     .background(DashboardWhite)
                     .padding(horizontal = 8.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -729,7 +739,7 @@ private fun DashboardMetricTile(
         Text(
             text = title,
             modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start,
+        textAlign = TextAlign.Start,
             style = dashboardTextStyle(titleSize, DashboardWhite, (-0.5).sp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -737,7 +747,7 @@ private fun DashboardMetricTile(
         Text(
             text = value.ifBlank { "0" },
             modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start,
+        textAlign = TextAlign.Start,
             style = dashboardTextStyle(valueSize, DashboardWhite, (-1.4).sp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -760,8 +770,7 @@ private fun SaveButton(
     )
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
             .shadow(
                 elevation = glowElevation,
                 shape = RoundedCornerShape(28.dp),
@@ -794,7 +803,9 @@ private fun DashboardInputDialog(
     title: String,
     value: String,
     numericOnly: Boolean,
+    showUndo: Boolean = false,
     onValueChange: (String) -> Unit,
+    onUndo: (() -> Unit)? = null,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
@@ -815,6 +826,8 @@ private fun DashboardInputDialog(
                 },
                 label = title,
                 keyboardType = if (numericOnly) KeyboardType.Number else KeyboardType.Text,
+                showUndo = showUndo,
+                onUndo = onUndo,
                 onDone = {
                     onConfirm()
                     keyboardController?.hide()
@@ -846,14 +859,39 @@ private fun LargeInputField(
     onValueChange: (String) -> Unit,
     label: String,
     keyboardType: KeyboardType = KeyboardType.Text,
+    showUndo: Boolean = false,
+    onUndo: (() -> Unit)? = null,
     onDone: (() -> Unit)? = null
 ) {
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+        keyboardController?.show()
+    }
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
         label = {
             Text(text = label, style = dashboardTextStyle(17.sp, DashboardHint, (-0.2).sp))
+        },
+        trailingIcon = if (showUndo && onUndo != null) {
+            {
+                IconButton(onClick = onUndo) {
+                    Icon(
+                        imageVector = Icons.Outlined.Undo,
+                        contentDescription = "Undo",
+                        tint = DashboardHint
+                    )
+                }
+            }
+        } else {
+            null
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
@@ -916,6 +954,20 @@ private fun createPersistentImageUri(context: Context): Uri {
         imageFile
     )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
