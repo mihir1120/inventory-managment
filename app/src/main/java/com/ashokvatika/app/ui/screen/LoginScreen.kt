@@ -3,6 +3,7 @@ package com.ashokvatika.app.ui.screen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.AlertDialog
@@ -46,6 +46,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -56,6 +58,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ashokvatika.app.R
 import com.ashokvatika.app.ui.theme.AshokvatikaPalette
 import com.ashokvatika.app.ui.theme.AshokvatikaTheme
 import com.ashokvatika.app.ui.theme.OrangeLight
@@ -64,6 +67,29 @@ import kotlinx.coroutines.launch
 
 private const val ValidUsername = "admin"
 private const val ValidPassword = "123"
+private const val PrivacyContactEmail = "info.crbons@mail.com"
+
+private val PrivacyPolicyText = """
+Ashokvatika Privacy Policy
+
+Ashokvatika is an inventory management app for recording products, stock counts, vendor details, dates, and optional product photos.
+
+Data you enter in the app, including product names, quantities, vendor details, and selected images, is stored locally on your device in the app's private database.
+
+This app does not send your inventory data, vendor data, login entries, or photos to the developer's servers. The app does not use analytics SDKs, advertising SDKs, or third-party tracking tools.
+
+Camera access is used only when you choose to capture a product image. Photo and document access is used only when you choose an image from your device or a document provider such as Google Drive.
+
+If you use the share feature, the app shares only the information you choose through Android's system share sheet to the app or contact you select.
+
+Data is kept on your device until you edit it, delete it, clear the app's storage, or uninstall the app. Images selected from other apps or cloud providers remain subject to those providers' own storage and retention practices.
+
+Ashokvatika does not sell personal data and does not share personal data with third parties except when you explicitly initiate sharing from the app.
+
+If you have privacy questions or requests, contact: info.crbons@mail.com
+
+This policy may be updated when app features or legal requirements change.
+""".trimIndent()
 
 @Composable
 fun LoginScreen(
@@ -78,6 +104,7 @@ fun LoginScreen(
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var isSubmitting by rememberSaveable { mutableStateOf(false) }
     var showForgotDialog by rememberSaveable { mutableStateOf(false) }
+    var showPrivacyDialog by rememberSaveable { mutableStateOf(false) }
     var helperMessage by rememberSaveable { mutableStateOf<String?>(null) }
 
     Box(
@@ -225,6 +252,18 @@ fun LoginScreen(
                     showForgotDialog = true
                 }
             )
+            Spacer(modifier = Modifier.height(14.dp))
+            Text(
+                text = "Privacy Policy",
+                color = AshokvatikaPalette.colors.link,
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    showPrivacyDialog = true
+                }
+            )
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -240,6 +279,27 @@ fun LoginScreen(
             title = { Text("Login credentials") },
             text = {
                 Text("Username: admin\nPassword: 123")
+            }
+        )
+    }
+
+    if (showPrivacyDialog) {
+        AlertDialog(
+            onDismissRequest = { showPrivacyDialog = false },
+            confirmButton = {
+                TextButton(onClick = { showPrivacyDialog = false }) {
+                    Text("Close")
+                }
+            },
+            title = { Text("Privacy Policy") },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(PrivacyPolicyText)
+                }
             }
         )
     }
@@ -260,11 +320,13 @@ private fun LogoCard(isCompact: Boolean) {
             .background(AshokvatikaPalette.colors.card),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            imageVector = Icons.Default.Lock,
-            contentDescription = null,
-            tint = AshokvatikaPalette.colors.accent,
-            modifier = Modifier.size(if (isCompact) 48.dp else 58.dp)
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "Ashokvatika logo",
+            modifier = Modifier
+                .size(if (isCompact) 108.dp else 126.dp)
+                .padding(10.dp),
+            contentScale = ContentScale.Fit
         )
     }
 }
@@ -422,5 +484,3 @@ private fun LoginScreenPreview() {
         LoginScreen(onLoginSuccess = {})
     }
 }
-
-
